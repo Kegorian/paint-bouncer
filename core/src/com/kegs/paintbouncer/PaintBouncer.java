@@ -3,30 +3,47 @@ package com.kegs.paintbouncer;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.kegs.paintbouncer.screens.ScreenManager;
 
 public class PaintBouncer extends Game {
 
 	// Fields
 	private SpriteBatch batch;
+	private ScreenManager screenManager;
 	
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
+		screenManager = new ScreenManager(this, batch);
 	}
 
 	@Override
 	public void render () {
-		Gdx.gl.glClearColor(0, 0, 0, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		batch.begin();
+		super.render();
 
-		batch.end();
+		float delta = Gdx.graphics.getDeltaTime();
+
+		// Render the game world.
+
 	}
 	
 	@Override
 	public void dispose () {
 		batch.dispose();
+		screenManager.dispose();
 	}
+
+	public SpriteBatch getBatch() { return batch; }
 }
+
+/**
+ * Some Ideas:
+ *
+ * Random platforms spawn from either side and you need to keep moving down before
+ * your character reaches the top of the screen.
+ *
+ * But you also need to change colour before you hit the next platform.
+ * You need to make sure that you are of the same colour at the platform you
+ * are landing on.
+ */
