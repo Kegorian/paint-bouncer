@@ -1,5 +1,6 @@
 package com.kegs.paintbouncer.platform;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
@@ -12,8 +13,9 @@ public class Platform extends Sprite {
 
     // Fields
     private Body body;
+    private Color color;
 
-    public Platform(World world, Texture texture, float x, float y) {
+    public Platform(World world, Texture texture, float x, float y, Color color) {
         super(texture);
 
         BodyDef platformBodyDef = new BodyDef();
@@ -25,11 +27,21 @@ public class Platform extends Sprite {
         platformShape.setAsBox(200.0f, 10.0f);
 
         body.createFixture(platformShape, 0.0f);
-
         platformShape.dispose();
+
+        // Set color
+        this.color = color;
+
+        body.setUserData(this);
     }
 
     public void update(float delta) {
         setPosition(body.getPosition().x - 200.0f, body.getPosition().y - 10.0f);
     }
+
+    public void rotate(float amount) {
+
+    }
+
+    public Color getColor() { return color; }
 }

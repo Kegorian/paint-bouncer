@@ -1,15 +1,19 @@
 package com.kegs.paintbouncer.entities;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.kegs.paintbouncer.colors.GameColors;
+import com.kegs.paintbouncer.platform.Platform;
 
 public class Player extends Sprite {
 
     // Fields
     private Body playerBody;
+    private Color color;
 
     public Player(World world) {
         super(new Texture(Gdx.files.internal("graphics/player.png")), 40, 40);
@@ -17,7 +21,7 @@ public class Player extends Sprite {
         // Set up Physics for the player.
         BodyDef playerBodyDef = new BodyDef();
         playerBodyDef.type = BodyType.DynamicBody;
-        playerBodyDef.position.set(205, 600);
+        playerBodyDef.position.set(205, 750);
 
         playerBody = world.createBody(playerBodyDef);
 
@@ -27,12 +31,15 @@ public class Player extends Sprite {
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = circle;
         fixtureDef.density = 0.95f;
-        fixtureDef.friction = 0.05f;
+        fixtureDef.friction = 0.0f;
         fixtureDef.restitution = 0.75f;
 
         Fixture fixture = playerBody.createFixture(fixtureDef);
 
         circle.dispose();
+
+        // Default Color.
+        color = GameColors.BLUE;
     }
 
     public void render(float delta) {
@@ -42,4 +49,21 @@ public class Player extends Sprite {
     public void update(float delta) {
         setPosition(playerBody.getPosition().x - 20, playerBody.getPosition().y - 20);
     }
+
+    public void checkContact(Contact contact) {
+        Body platform;
+
+        // See which fixture is the platform.
+        if (contact.getFixtureA().getBody().equals(playerBody)) {
+            platform = contact.getFixtureB().getBody();
+        } else {
+            platform = contact.getFixtureA().getBody();
+        }
+
+        if (color.toFloatBits() != ((Platform)platform.getUserData()).getColor().toFloatBits()) {
+            // TODO: Add something when the colours and not the same.
+        }
+    }
+
+    public Color getColor() { return color; }
 }
