@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-public class GameScreen extends ScreenAdapter {
+public abstract class GameScreen extends ScreenAdapter {
 
     // Fields
     protected SpriteBatch spriteBatch;
@@ -32,7 +32,6 @@ public class GameScreen extends ScreenAdapter {
 
         camera.update();
         spriteBatch.setProjectionMatrix(camera.combined);
-
     }
 
     @Override
@@ -40,7 +39,5 @@ public class GameScreen extends ScreenAdapter {
 
     }
 
-    protected void update(float delta) {
-
-    }
+    protected abstract void update(float delta);
 }

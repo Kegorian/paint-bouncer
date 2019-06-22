@@ -31,6 +31,7 @@ public class MainMenuScreen extends GameScreen {
 
     @Override
     public void dispose() {
+        super.dispose();
         menuFont.dispose();
     }
 
