@@ -22,8 +22,10 @@ public class GameplayScreen extends GameScreen {
     public GameplayScreen(SpriteBatch spriteBatch, ScreenManager parent) {
         super(spriteBatch, parent);
 
+        camera.zoom = 0.5f;
+
         // Set up physics
-        gameWorld = new World(new Vector2(0, -150), true);
+        gameWorld = new World(new Vector2(0, -250), true);
         debugRenderer = new Box2DDebugRenderer();
 
         background = new Texture(Gdx.files.internal("graphics/backgrounds/game_play.png"));
@@ -93,17 +95,20 @@ public class GameplayScreen extends GameScreen {
     }
 
     private void addWalls() {
+        float halfWidth = Gdx.graphics.getWidth() / 2.0f;
+        float halfHeight = Gdx.graphics.getHeight() / 2.0f;
+
         // Left Wall
         BodyDef platformBodyDef = new BodyDef();
         platformBodyDef.type = BodyDef.BodyType.KinematicBody;
-        platformBodyDef.position.set(new Vector2(-8, (Gdx.graphics.getHeight() / 2.0f) + 5));
+        platformBodyDef.position.set(new Vector2(halfWidth / 2 - 8, halfHeight + 5));
         Body body = gameWorld.createBody(platformBodyDef);
         PolygonShape platformShape = new PolygonShape();
-        platformShape.setAsBox(10, (Gdx.graphics.getHeight() / 2.0f) + 5);
+        platformShape.setAsBox(10, halfHeight + 5);
         body.createFixture(platformShape, 0.0f);
 
         // Right Wall
-        platformBodyDef.position.set(new Vector2(Gdx.graphics.getWidth() + 8, (Gdx.graphics.getHeight() / 2.0f) + 5));
+        platformBodyDef.position.set(new Vector2(halfWidth + (halfWidth / 2) + 8, halfHeight + 5));
         Body bodyTwo = gameWorld.createBody(platformBodyDef);
         bodyTwo.createFixture(platformShape, 0.0f);
         platformShape.dispose();

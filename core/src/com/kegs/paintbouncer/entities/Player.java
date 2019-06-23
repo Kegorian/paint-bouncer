@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.kegs.paintbouncer.colors.GameColors;
@@ -19,6 +18,8 @@ public class Player extends Sprite {
     public Player(World world) {
         super(new Texture(Gdx.files.internal("graphics/player.png")), 40, 40);
 
+        setScale(0.5f);
+
         // Set up Physics for the player.
         BodyDef playerBodyDef = new BodyDef();
         playerBodyDef.type = BodyType.DynamicBody;
@@ -27,13 +28,13 @@ public class Player extends Sprite {
         playerBody = world.createBody(playerBodyDef);
 
         CircleShape circle = new CircleShape();
-        circle.setRadius(20.0f);
+        circle.setRadius(10.0f);
 
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = circle;
-        fixtureDef.density = 0.95f;
+        fixtureDef.density = 10f;
         fixtureDef.friction = 0.1f;
-        fixtureDef.restitution = 0.3f;
+        fixtureDef.restitution = 0.95f;
 
         playerBody.createFixture(fixtureDef);
 

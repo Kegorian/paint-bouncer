@@ -52,7 +52,7 @@ public class PlatformSpawner {
         }
 
         // Randomly get position and colour.
-        float x = rnd.nextInt(30) - 15;
+        float x = rnd.nextInt(30) + 130;
         float y;
         Color prevCol;
 
@@ -61,13 +61,13 @@ public class PlatformSpawner {
 
             prevCol = GameColors.BLUE; // Just a colour to keep the method working.
         } else {
-            float yDis = rnd.nextInt(20) + 170.0f;
+            float yDis = rnd.nextInt(10) + 200.0f;
             y = platforms.last().getY() - yDis;
 
             prevCol = platforms.last().getColor();
         }
 
-        float rotation = (rnd.nextInt(15) + 5.0f) * -1;
+        float rotation =(rnd.nextInt(10) + 20.0f) * -1;
 
         if (platforms.size % 2 == 0) {
             x = Gdx.graphics.getWidth() - x;

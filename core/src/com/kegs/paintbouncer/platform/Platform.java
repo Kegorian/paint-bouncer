@@ -20,6 +20,8 @@ public class Platform extends Sprite {
     public Platform(World world, float x, float y, float rotation, Color color) {
         super(new Texture(Gdx.files.internal("graphics/platform.png")));
 
+        setScale(0.5f);
+
         BodyDef platformBodyDef = new BodyDef();
         platformBodyDef.type = BodyType.KinematicBody;
         platformBodyDef.position.set(new Vector2(x, y));
@@ -27,7 +29,7 @@ public class Platform extends Sprite {
         body = world.createBody(platformBodyDef);
 
         PolygonShape platformShape = new PolygonShape();
-        platformShape.setAsBox(300.0f, 10.0f);
+        platformShape.setAsBox(150.0f, 5.0f);
 
         body.createFixture(platformShape, 0.0f);
         platformShape.dispose();
