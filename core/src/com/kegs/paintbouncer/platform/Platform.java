@@ -27,7 +27,7 @@ public class Platform extends Sprite {
         body = world.createBody(platformBodyDef);
 
         PolygonShape platformShape = new PolygonShape();
-        platformShape.setAsBox(400.0f, 10.0f);
+        platformShape.setAsBox(300.0f, 10.0f);
 
         body.createFixture(platformShape, 0.0f);
         platformShape.dispose();
@@ -43,7 +43,7 @@ public class Platform extends Sprite {
     }
 
     public void update(float delta) {
-        setPosition(body.getPosition().x - 400.0f, body.getPosition().y - 10.0f);
+        setPosition(body.getPosition().x - 300.0f, body.getPosition().y - 10.0f);
     }
 
     public void rotate(float amount) {

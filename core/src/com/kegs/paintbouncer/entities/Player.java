@@ -22,7 +22,7 @@ public class Player extends Sprite {
         // Set up Physics for the player.
         BodyDef playerBodyDef = new BodyDef();
         playerBodyDef.type = BodyType.DynamicBody;
-        playerBodyDef.position.set(205, 750);
+        playerBodyDef.position.set((Gdx.graphics.getWidth() - getWidth()) / 2.0f, 775);
 
         playerBody = world.createBody(playerBodyDef);
 
@@ -32,10 +32,10 @@ public class Player extends Sprite {
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = circle;
         fixtureDef.density = 0.95f;
-        fixtureDef.friction = 0.0f;
-        fixtureDef.restitution = 0.75f;
+        fixtureDef.friction = 0.1f;
+        fixtureDef.restitution = 0.3f;
 
-        Fixture fixture = playerBody.createFixture(fixtureDef);
+        playerBody.createFixture(fixtureDef);
 
         circle.dispose();
 
@@ -49,8 +49,6 @@ public class Player extends Sprite {
 
     public void update(float delta) {
         setPosition(playerBody.getPosition().x - 20, playerBody.getPosition().y - 20);
-        // Keep the player moving a decent speed instead of slowing down.
-        playerBody.applyLinearImpulse(new Vector2(0, -3.0f), playerBody.getPosition(), true);
     }
 
     public void checkContact(Contact contact) {
@@ -63,8 +61,10 @@ public class Player extends Sprite {
             platform = contact.getFixtureA().getBody();
         }
 
-        if (color.toFloatBits() != ((Platform)platform.getUserData()).getColor().toFloatBits()) {
-            // TODO: Add something when the colours and not the same.
+        if (platform.getUserData() != null) {
+            if (color.toFloatBits() != ((Platform)platform.getUserData()).getColor().toFloatBits()) {
+                // TODO: Add something when the colours and not the same.
+            }
         }
     }
 

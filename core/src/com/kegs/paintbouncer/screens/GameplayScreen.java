@@ -23,7 +23,7 @@ public class GameplayScreen extends GameScreen {
         super(spriteBatch, parent);
 
         // Set up physics
-        gameWorld = new World(new Vector2(0, -100), true);
+        gameWorld = new World(new Vector2(0, -150), true);
         debugRenderer = new Box2DDebugRenderer();
 
         background = new Texture(Gdx.files.internal("graphics/backgrounds/game_play.png"));
@@ -46,6 +46,9 @@ public class GameplayScreen extends GameScreen {
             @Override
             public void postSolve(Contact contact, ContactImpulse impulse) { }
         });
+
+        // All Walls
+        addWalls();
     }
 
     @Override
@@ -87,5 +90,22 @@ public class GameplayScreen extends GameScreen {
 
         // Move camera
         // camera.position.y = camera.position.y - 1.2f;
+    }
+
+    private void addWalls() {
+        // Left Wall
+        BodyDef platformBodyDef = new BodyDef();
+        platformBodyDef.type = BodyDef.BodyType.KinematicBody;
+        platformBodyDef.position.set(new Vector2(-8, (Gdx.graphics.getHeight() / 2.0f) + 5));
+        Body body = gameWorld.createBody(platformBodyDef);
+        PolygonShape platformShape = new PolygonShape();
+        platformShape.setAsBox(10, (Gdx.graphics.getHeight() / 2.0f) + 5);
+        body.createFixture(platformShape, 0.0f);
+
+        // Right Wall
+        platformBodyDef.position.set(new Vector2(Gdx.graphics.getWidth() + 8, (Gdx.graphics.getHeight() / 2.0f) + 5));
+        Body bodyTwo = gameWorld.createBody(platformBodyDef);
+        bodyTwo.createFixture(platformShape, 0.0f);
+        platformShape.dispose();
     }
 }
