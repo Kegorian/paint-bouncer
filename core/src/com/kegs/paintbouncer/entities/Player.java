@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.kegs.paintbouncer.colors.GameColors;
@@ -48,6 +49,8 @@ public class Player extends Sprite {
 
     public void update(float delta) {
         setPosition(playerBody.getPosition().x - 20, playerBody.getPosition().y - 20);
+        // Keep the player moving a decent speed instead of slowing down.
+        playerBody.applyLinearImpulse(new Vector2(0, -3.0f), playerBody.getPosition(), true);
     }
 
     public void checkContact(Contact contact) {

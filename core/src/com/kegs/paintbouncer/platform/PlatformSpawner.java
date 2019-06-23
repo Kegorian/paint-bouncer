@@ -1,31 +1,23 @@
 package com.kegs.paintbouncer.platform;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Queue;
 import com.kegs.paintbouncer.colors.GameColors;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 public class PlatformSpawner {
 
     // Fields
     private Queue<Platform> platforms;
-    private ArrayList<Texture> platformImages;
     private World world;
     private Random rnd;
 
     public PlatformSpawner(World world) {
         platforms = new Queue<Platform>(7);
-
-        platformImages = new ArrayList<Texture>();
-        platformImages.add(new Texture(Gdx.files.internal("graphics/platforms/platform_green.png")));
-        platformImages.add(new Texture(Gdx.files.internal("graphics/platforms/platform_red.png")));
-        platformImages.add(new Texture(Gdx.files.internal("graphics/platforms/platform_orange.png")));
-        platformImages.add(new Texture(Gdx.files.internal("graphics/platforms/platform_blue.png")));
 
         this.world = world;
         rnd = new Random();
@@ -33,13 +25,12 @@ public class PlatformSpawner {
         spawnPlatform();
         spawnPlatform();
         spawnPlatform();
-
-        System.out.println(platforms);
     }
 
     public void render(SpriteBatch spriteBatch) {
         for (Platform platform : platforms) {
-            spriteBatch.draw(platform, platform.getX(), platform.getY());
+            platform.setColor(platform.getColor());
+            platform.draw(spriteBatch);
         }
     }
 
@@ -50,9 +41,7 @@ public class PlatformSpawner {
     }
 
     public void dispose() {
-        for (Texture image : platformImages) {
-            image.dispose();
-        }
+
     }
 
     public void spawnPlatform() {
@@ -61,26 +50,49 @@ public class PlatformSpawner {
             platforms.removeFirst();
         }
 
-        // Randomly get position.
+        // Randomly get position and colour.
         float x = rnd.nextInt(179) + 1.0f; // Between 1 and 180.
         float y;
+        Color prevCol;
 
         if (platforms.isEmpty()) {
             y = 700;
+
+            prevCol = GameColors.BLUE; // Random previous colour.
         } else {
-            float yDis = rnd.nextInt(20) + 120.0f;
+            float yDis = rnd.nextInt(20) + 170.0f;
             y = platforms.last().getY() - yDis;
+
+            prevCol = platforms.last().getColor();
         }
+
+        float rotation = (rnd.nextInt(20) + 10.0f) * -1;
 
         if (platforms.size % 2 == 0) {
             x = Gdx.graphics.getWidth() - x;
+            rotation *= -1;
         }
 
-        System.out.println("Platfrom added at x: " + x + ", y: " + y);
-
-        int rndCol = rnd.nextInt(3);
-
-        platforms.addLast(new Platform(world, platformImages.get(rndCol), x, y, GameColors.BLUE));
+        platforms.addLast(new Platform(world, x, y, rotation, getRndColor(prevCol)));
         platforms.last().update(0);
+    }
+
+
+    private Color getRndColor(Color prevCol) {
+        Color newCol;
+
+        switch(rnd.nextInt(4)) {
+            case 0: newCol = GameColors.BLUE; break;
+            case 1: newCol = GameColors.RED; break;
+            case 2: newCol = GameColors.ORANGE; break;
+            case 3: newCol = GameColors.GREEN; break;
+            default: newCol = GameColors.ORANGE;
+        }
+
+        if (prevCol.toFloatBits() == newCol.toFloatBits()) {
+            return getRndColor(prevCol);
+        } else {
+            return newCol;
+        }
     }
 }

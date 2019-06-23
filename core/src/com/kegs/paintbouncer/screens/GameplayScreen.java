@@ -1,6 +1,7 @@
 package com.kegs.paintbouncer.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
@@ -56,8 +57,13 @@ public class GameplayScreen extends GameScreen {
         // Draw Sprites
         spriteBatch.begin();
         spriteBatch.draw(background, 0, 0);
+
         platformSpawner.render(spriteBatch);
-        spriteBatch.draw(player, player.getX(), player.getY());
+
+        player.setColor(player.getColor());
+        player.draw(spriteBatch);
+
+        spriteBatch.setColor(Color.WHITE);
         spriteBatch.end();
 
         // Debug Render
