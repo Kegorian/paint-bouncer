@@ -57,6 +57,8 @@ public class Platform extends Sprite {
         setRotation(rotation);
         rotation = rotation * (float)(Math.PI/180);
         body.setTransform(body.getWorldCenter(), rotation);
+
+        setPosition(body.getPosition().x - 300.0f, body.getPosition().y - 10.0f);
     }
 
     /**

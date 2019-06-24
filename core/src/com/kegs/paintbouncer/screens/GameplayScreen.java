@@ -32,6 +32,7 @@ public class GameplayScreen extends GameScreen {
         super(spriteBatch, parent);
 
         camera.zoom = 0.5f;
+        camera.position.y = camera.viewportHeight;
 
         // Set up physics
         gameWorld = new World(new Vector2(0, -250), true);
@@ -107,15 +108,28 @@ public class GameplayScreen extends GameScreen {
      */
     protected void update(float delta) {
         gameWorld.step(1/60f, 6, 2);
-
-        platformSpawner.update(delta);
         player.update(delta);
 
         // Move camera
-        // camera.position.y = camera.position.y - 0.4f; TODO: Change this to follow the ball, somewhat.
+        if (player.getY() < camera.position.y + camera.viewportHeight * 0.125) {
+            if (player.getX() < camera.position.y - camera.viewportHeight * 0.25) {
+                camera.position.y = camera.position.y - 2f;
+            } else {
+                camera.position.y = camera.position.y - 1.05f;
+            }
+        }
+
         // Update Wall position to match the camera position.
         leftWall.setTransform(new Vector2(camera.position.x - camera.viewportWidth / 4 - 9.5f, camera.position.y), 0);
         rightWall.setTransform(new Vector2(camera.position.x + camera.viewportWidth / 4 + 10f, camera.position.y), 0);
+
+        // Spawn new platforms.
+        if (camera.position.y - (camera.viewportHeight * 0.25) < platformSpawner.getLastPlatform().getY() + 400.0f) {
+            platformSpawner.spawnPlatform();
+            platformSpawner.removePlatform();
+        }
+
+        platformSpawner.update(delta);
     }
 
     /**

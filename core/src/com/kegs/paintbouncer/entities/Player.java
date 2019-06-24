@@ -33,7 +33,7 @@ public class Player extends Sprite {
         // Set up Physics for the player.
         BodyDef playerBodyDef = new BodyDef();
         playerBodyDef.type = BodyType.DynamicBody;
-        playerBodyDef.position.set((Gdx.graphics.getWidth() - getWidth()) / 2.0f, 775);
+        playerBodyDef.position.set((Gdx.graphics.getWidth() - getWidth()) / 2.0f, 820);
 
         playerBody = world.createBody(playerBodyDef);
 
@@ -43,7 +43,7 @@ public class Player extends Sprite {
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = circle;
         fixtureDef.density = 0.7f;
-        fixtureDef.friction = 0.1f;
+        fixtureDef.friction = 0.05f;
         fixtureDef.restitution = 0.95f;
 
         playerBody.createFixture(fixtureDef);
@@ -82,6 +82,8 @@ public class Player extends Sprite {
             }
         }
     }
+
+    public Body getBody() { return playerBody; }
 
     public Color getColor() { return color; }
 }

@@ -19,19 +19,19 @@ public class PlatformSpawner {
     private Queue<Platform> platforms;
     private World world;
     private Random rnd;
+    private int platformCount;
 
     /**
      * Creates a new instance of PlatformSpawner.
      * @param world The current physics world.
      */
     public PlatformSpawner(World world) {
-        platforms = new Queue<Platform>(7);
+        platforms = new Queue<Platform>(8);
 
         this.world = world;
         rnd = new Random();
+        platformCount = 0;
 
-        spawnPlatform();
-        spawnPlatform();
         spawnPlatform();
     }
 
@@ -63,11 +63,6 @@ public class PlatformSpawner {
      * for every platform.
      */
     public void spawnPlatform() {
-        // Removes the platforms that are off the camera.
-        if (platforms.size > 6) {
-            platforms.removeFirst();
-        }
-
         // Randomly get position and colour.
         float x = rnd.nextInt(30) + 130;
         float y;
@@ -87,13 +82,28 @@ public class PlatformSpawner {
 
         float rotation =(rnd.nextInt(10) + 20.0f) * -1;
 
-        if (platforms.size % 2 == 0) {
+        if (platformCount % 2 == 0) {
             x = Gdx.graphics.getWidth() - x;
             rotation *= -1;
         }
 
         platforms.addLast(new Platform(world, x, y, rotation, getRndColor(prevCol)));
+        platformCount++;
         platforms.last().update(0);
+    }
+
+    /**
+     * @return The last platform in the list.
+     */
+    public Platform getLastPlatform() { return platforms.last(); }
+
+    /**
+     * Removes the first platform from the queue.
+     */
+    public void removePlatform() {
+        if (platforms.size >= 7) {
+            platforms.removeFirst();
+        }
     }
 
     /**
