@@ -6,6 +6,11 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+/**
+ * An extension of ScreenAdapter and therefore Screen with some fields and methods
+ * that are needed between screens within the game. For example a ScreenManager
+ * and a camera.
+ */
 public abstract class GameScreen extends ScreenAdapter {
 
     // Fields
@@ -13,6 +18,11 @@ public abstract class GameScreen extends ScreenAdapter {
     protected OrthographicCamera camera;
     protected ScreenManager parent;
 
+    /**
+     * Creates a new instance of GameScreen
+     * @param spriteBatch The current SpriteBatch
+     * @param parent The current ScreenManager
+     */
     public GameScreen(SpriteBatch spriteBatch, ScreenManager parent) {
         this.spriteBatch = spriteBatch;
         this.parent = parent;
@@ -22,6 +32,10 @@ public abstract class GameScreen extends ScreenAdapter {
                 Gdx.app.getGraphics().getHeight());
     }
 
+    /**
+     * Renders the screen to the window.
+     * @param delta Time between calls.
+     */
     @Override
     public void render(float delta) {
         // Update Screen
@@ -34,10 +48,18 @@ public abstract class GameScreen extends ScreenAdapter {
         spriteBatch.setProjectionMatrix(camera.combined);
     }
 
+    /**
+     * Disposes all objects.
+     */
     @Override
     public void dispose() {
 
     }
 
+    /**
+     * Updates the screen. This is used to update position and also to handle
+     * input.
+     * @param delta The time between calls.
+     */
     protected abstract void update(float delta);
 }

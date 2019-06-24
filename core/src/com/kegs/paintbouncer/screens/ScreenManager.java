@@ -6,12 +6,20 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.util.HashMap;
 
+/**
+ * Handles the changing, creation and deletion of GameScreens.
+ */
 public class ScreenManager {
 
     // Fields
     private Game game;
     private HashMap<ScreenType, Screen> screens;
 
+    /**
+     * Creates a new instance of ScreenManager.
+     * @param game The current Game object.
+     * @param spriteBatch The current SpriteBatch.
+     */
     public ScreenManager(Game game, SpriteBatch spriteBatch) {
         this.game = game;
 

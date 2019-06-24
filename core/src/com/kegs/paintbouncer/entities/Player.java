@@ -9,15 +9,25 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.kegs.paintbouncer.colors.GameColors;
 import com.kegs.paintbouncer.platform.Platform;
 
+/**
+ * The player. The user will have no direct control over the movement of the
+ * physics body, however they will be able to change the colour of the texture.
+ * For the game's mechanics.
+ */
 public class Player extends Sprite {
 
     // Fields
     private Body playerBody;
     private Color color;
 
+    /**
+     * Creates a new instance of Player.
+     * @param world The current physics world.
+     */
     public Player(World world) {
         super(new Texture(Gdx.files.internal("graphics/player.png")), 40, 40);
 
+        // Scale the texture down to fit the physics body.
         setScale(0.5f);
 
         // Set up Physics for the player.
@@ -32,7 +42,7 @@ public class Player extends Sprite {
 
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = circle;
-        fixtureDef.density = 10f;
+        fixtureDef.density = 0.7f;
         fixtureDef.friction = 0.1f;
         fixtureDef.restitution = 0.95f;
 
@@ -44,14 +54,18 @@ public class Player extends Sprite {
         color = GameColors.BLUE;
     }
 
-    public void render(float delta) {
-        
-    }
-
+    /**
+     * Updates the position of the texture to match the physics body.
+     */
     public void update(float delta) {
         setPosition(playerBody.getPosition().x - 20, playerBody.getPosition().y - 20);
     }
 
+    /**
+     * Checks the contact of the player and a platform / wall, to see if they
+     * match colours.
+     * @param contact The contact object for the player and platform.
+     */
     public void checkContact(Contact contact) {
         Body platform;
 

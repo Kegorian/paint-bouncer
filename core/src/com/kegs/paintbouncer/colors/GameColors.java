@@ -2,6 +2,9 @@ package com.kegs.paintbouncer.colors;
 
 import com.badlogic.gdx.graphics.Color;
 
+/**
+ * All colours that are used in the game.
+ */
 public enum GameColors {
 
     INSTANCE;

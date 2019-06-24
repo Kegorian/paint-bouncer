@@ -9,6 +9,10 @@ import com.kegs.paintbouncer.colors.GameColors;
 
 import java.util.Random;
 
+/**
+ * Holds a queue of platforms. Also allows the creation of new platforms and will
+ * delete platforms that go off the screen.
+ */
 public class PlatformSpawner {
 
     // Fields
@@ -16,18 +20,24 @@ public class PlatformSpawner {
     private World world;
     private Random rnd;
 
+    /**
+     * Creates a new instance of PlatformSpawner.
+     * @param world The current physics world.
+     */
     public PlatformSpawner(World world) {
         platforms = new Queue<Platform>(7);
 
         this.world = world;
         rnd = new Random();
 
-
         spawnPlatform();
         spawnPlatform();
         spawnPlatform();
     }
 
+    /**
+     * Renders all platforms to the screen with their correct colour.
+     */
     public void render(SpriteBatch spriteBatch) {
         for (Platform platform : platforms) {
             platform.setColor(platform.getColor());
@@ -35,6 +45,7 @@ public class PlatformSpawner {
         }
     }
 
+    // Updates the platforms.
     public void update(float delta) {
         for (Platform platform : platforms) {
             platform.update(delta);
@@ -45,6 +56,12 @@ public class PlatformSpawner {
 
     }
 
+    /**
+     * Spawns a new platform with a random distance from the one above. A random
+     * rotation and a random length in towards the screen's centre. Also,
+     * automatically detects which side the platform should be on, alternating
+     * for every platform.
+     */
     public void spawnPlatform() {
         // Removes the platforms that are off the camera.
         if (platforms.size > 6) {
@@ -56,6 +73,7 @@ public class PlatformSpawner {
         float y;
         Color prevCol;
 
+        // Special case for the first platform spawn.
         if (platforms.isEmpty()) {
             y = 700;
 
@@ -78,6 +96,10 @@ public class PlatformSpawner {
         platforms.last().update(0);
     }
 
+    /**
+     * Returns a random colours. Different from the colour entered as the
+     * argument.
+     */
     private Color getRndColor(Color prevCol) {
         Color newCol;
 
@@ -89,6 +111,8 @@ public class PlatformSpawner {
             default: newCol = GameColors.ORANGE;
         }
 
+        // To make sure that the player needs to change colour for every platform.
+        // And there will not be a section where it is all just the same colour.
         if (prevCol.toFloatBits() == newCol.toFloatBits()) {
             return getRndColor(prevCol);
         } else {
