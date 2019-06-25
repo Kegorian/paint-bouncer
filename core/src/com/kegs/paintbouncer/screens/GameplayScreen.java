@@ -1,12 +1,15 @@
 package com.kegs.paintbouncer.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.kegs.paintbouncer.entities.Player;
+import com.kegs.paintbouncer.input.GameGestureListener;
 import com.kegs.paintbouncer.platform.PlatformSpawner;
 
 /**
@@ -61,6 +64,13 @@ public class GameplayScreen extends GameScreen {
 
         // All Walls
         addWalls();
+
+        // Set up input.
+        InputMultiplexer im = new InputMultiplexer();
+        GestureDetector gd = new GestureDetector(new GameGestureListener(player));
+        im.addProcessor(gd);
+
+        Gdx.input.setInputProcessor(im);
     }
 
     /**

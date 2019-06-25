@@ -45,7 +45,9 @@ public class PlatformSpawner {
         }
     }
 
-    // Updates the platforms.
+    /**
+     * Updates the platforms.
+     */
     public void update(float delta) {
         for (Platform platform : platforms) {
             platform.update(delta);
@@ -80,7 +82,7 @@ public class PlatformSpawner {
             prevCol = platforms.last().getColor();
         }
 
-        float rotation =(rnd.nextInt(10) + 20.0f) * -1;
+        float rotation = (rnd.nextInt(16) + 18.0f) * -1;
 
         if (platformCount % 2 == 0) {
             x = Gdx.graphics.getWidth() - x;
@@ -102,6 +104,7 @@ public class PlatformSpawner {
      */
     public void removePlatform() {
         if (platforms.size >= 7) {
+            world.destroyBody(platforms.first().getBody());
             platforms.removeFirst();
         }
     }

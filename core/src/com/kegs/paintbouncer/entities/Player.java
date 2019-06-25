@@ -9,6 +9,8 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.kegs.paintbouncer.colors.GameColors;
 import com.kegs.paintbouncer.platform.Platform;
 
+import java.util.Random;
+
 /**
  * The player. The user will have no direct control over the movement of the
  * physics body, however they will be able to change the colour of the texture.
@@ -30,10 +32,15 @@ public class Player extends Sprite {
         // Scale the texture down to fit the physics body.
         setScale(0.5f);
 
+        // Random X Spawn.
+        Random rnd = new Random();
+        float xPos = ((Gdx.graphics.getWidth() - getWidth()) / 2.0f) - 80;
+        float randX = rnd.nextInt(160);
+
         // Set up Physics for the player.
         BodyDef playerBodyDef = new BodyDef();
         playerBodyDef.type = BodyType.DynamicBody;
-        playerBodyDef.position.set((Gdx.graphics.getWidth() - getWidth()) / 2.0f, 820);
+        playerBodyDef.position.set(xPos + randX, 820);
 
         playerBody = world.createBody(playerBodyDef);
 
@@ -84,6 +91,8 @@ public class Player extends Sprite {
     }
 
     public Body getBody() { return playerBody; }
+
+    public void setPlayerColor(Color color) { this.color = color; }
 
     public Color getColor() { return color; }
 }

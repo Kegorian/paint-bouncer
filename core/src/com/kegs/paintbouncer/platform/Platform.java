@@ -68,5 +68,7 @@ public class Platform extends Sprite {
         setPosition(body.getPosition().x - 300.0f, body.getPosition().y - 10.0f);
     }
 
+    public Body getBody() { return body; }
+
     public Color getColor() { return color; }
 }
