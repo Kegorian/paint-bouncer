@@ -5,9 +5,11 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.kegs.paintbouncer.colors.GameColors;
 import com.kegs.paintbouncer.entities.Player;
 import com.kegs.paintbouncer.input.GameGestureListener;
 import com.kegs.paintbouncer.platform.PlatformSpawner;
@@ -25,6 +27,7 @@ public class GameplayScreen extends GameScreen {
     private Box2DDebugRenderer debugRenderer;
     private Player player;
     private PlatformSpawner platformSpawner;
+    private ShapeRenderer shapeRenderer;
 
     /**
      * Creates new instance of GameplayScreen
@@ -44,6 +47,7 @@ public class GameplayScreen extends GameScreen {
         background = new Texture(Gdx.files.internal("graphics/backgrounds/game_play.png"));
         player = new Player(gameWorld);
         platformSpawner = new PlatformSpawner(gameWorld);
+        shapeRenderer = new ShapeRenderer();
 
         // Set up collision check.
         gameWorld.setContactListener(new ContactListener() {
@@ -62,8 +66,7 @@ public class GameplayScreen extends GameScreen {
             public void postSolve(Contact contact, ContactImpulse impulse) { /* Left Blank. */ }
         });
 
-        // All Walls
-        addWalls();
+        addRailGuards();
 
         // Set up input.
         InputMultiplexer im = new InputMultiplexer();
@@ -85,18 +88,20 @@ public class GameplayScreen extends GameScreen {
 
         // Draw Sprites
         spriteBatch.begin();
-        spriteBatch.draw(background, 0, camera.position.y - Gdx.graphics.getHeight() / 2.0f);
-
+        spriteBatch.draw(background, 0, camera.position.y - viewport.getWorldHeight() / 2.0f);
         platformSpawner.render(spriteBatch);
+        spriteBatch.end();
 
+        addWalls();
+
+        spriteBatch.begin();
         player.setColor(player.getColor());
         player.draw(spriteBatch);
-
         spriteBatch.setColor(Color.WHITE);
         spriteBatch.end();
 
         // Debug Render
-        debugRenderer.render(gameWorld, camera.combined);
+        // debugRenderer.render(gameWorld, camera.combined);
     }
 
     /**
@@ -130,8 +135,8 @@ public class GameplayScreen extends GameScreen {
         }
 
         // Update Wall position to match the camera position.
-        leftWall.setTransform(new Vector2(camera.position.x - camera.viewportWidth / 4 - 9.5f, camera.position.y), 0);
-        rightWall.setTransform(new Vector2(camera.position.x + camera.viewportWidth / 4 + 10f, camera.position.y), 0);
+        leftWall.setTransform(new Vector2(camera.position.x - camera.viewportWidth / 4, camera.position.y), 0);
+        rightWall.setTransform(new Vector2(camera.position.x + camera.viewportWidth / 4, camera.position.y), 0);
 
         // Spawn new platforms.
         if (camera.position.y - (camera.viewportHeight * 0.25) < platformSpawner.getLastPlatform().getY() + 400.0f) {
@@ -143,10 +148,41 @@ public class GameplayScreen extends GameScreen {
     }
 
     /**
+     * Add zones at the edges of the screen so the player can see what direction
+     * they need to swipe to select the colour.
+     */
+    private void addWalls() {
+        int size = 10;
+
+        int leftSide = (int)(camera.position.x - camera.viewportWidth / 4);
+        int rightSide = (int)(camera.position.x + camera.viewportWidth / 4) - size;
+        int topSide = (int)(camera.position.y + camera.viewportHeight / 4) - size;
+        int botSide = (int)(camera.position.y - camera.viewportHeight / 4);
+
+        int width = viewport.getScreenWidth();
+        int height = -viewport.getScreenHeight();
+
+
+
+        shapeRenderer.setProjectionMatrix(camera.combined);
+
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(GameColors.BLUE);
+        shapeRenderer.rect(rightSide, topSide, size, height);
+        shapeRenderer.setColor(GameColors.RED);
+        shapeRenderer.rect(leftSide, topSide, size, height);
+        shapeRenderer.setColor(GameColors.ORANGE);
+        shapeRenderer.rect(leftSide, topSide, width, size);
+        shapeRenderer.setColor(GameColors.GREEN);
+        shapeRenderer.rect(leftSide, botSide, width, size);
+        shapeRenderer.end();
+    }
+
+    /**
      * Adds the walls to the left and right and sets up their physics. This is
      * moved here to avoid clutter in the constructor, but could be there as well.
      */
-    private void addWalls() {
+    private void addRailGuards() {
         float halfWidth = Gdx.graphics.getWidth() / 2.0f;
         float halfHeight = Gdx.graphics.getHeight() / 2.0f;
 

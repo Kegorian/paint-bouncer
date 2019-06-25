@@ -85,7 +85,7 @@ public class PlatformSpawner {
         float rotation = (rnd.nextInt(16) + 18.0f) * -1;
 
         if (platformCount % 2 == 0) {
-            x = Gdx.graphics.getWidth() - x;
+            x = 480 - x;
             rotation *= -1;
         }
 

@@ -5,6 +5,8 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 /**
  * An extension of ScreenAdapter and therefore Screen with some fields and methods
@@ -16,6 +18,7 @@ public abstract class GameScreen extends ScreenAdapter {
     // Fields
     protected SpriteBatch spriteBatch;
     protected OrthographicCamera camera;
+    protected Viewport viewport;
     protected ScreenManager parent;
 
     /**
@@ -28,8 +31,16 @@ public abstract class GameScreen extends ScreenAdapter {
         this.parent = parent;
 
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, Gdx.app.getGraphics().getWidth(),
-                Gdx.app.getGraphics().getHeight());
+        viewport = new FitViewport(480, 800, camera);
+        camera.setToOrtho(false, viewport.getWorldWidth(),
+                viewport.getWorldHeight());
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        viewport.update(width, height);
+
+        System.out.println("Width: " + width + ", Height: " + height);
     }
 
     /**

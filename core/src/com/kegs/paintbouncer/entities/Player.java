@@ -34,7 +34,7 @@ public class Player extends Sprite {
 
         // Random X Spawn.
         Random rnd = new Random();
-        float xPos = ((Gdx.graphics.getWidth() - getWidth()) / 2.0f) - 80;
+        float xPos = ((480 - getWidth()) / 2.0f) - 80;
         float randX = rnd.nextInt(160);
 
         // Set up Physics for the player.
