@@ -39,8 +39,6 @@ public abstract class GameScreen extends ScreenAdapter {
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height);
-
-        System.out.println("Width: " + width + ", Height: " + height);
     }
 
     /**

@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.*;
 import com.kegs.paintbouncer.colors.GameColors;
 import com.kegs.paintbouncer.entities.Player;
@@ -126,13 +127,8 @@ public class GameplayScreen extends GameScreen {
         player.update(delta);
 
         // Move camera
-        if (player.getY() < camera.position.y + camera.viewportHeight * 0.125) {
-            if (player.getX() < camera.position.y - camera.viewportHeight * 0.25) {
-                camera.position.y = camera.position.y - 2f;
-            } else {
-                camera.position.y = camera.position.y - 1.05f;
-            }
-        }
+        float lerp = 0.75f;
+        camera.position.y += (player.getY() - camera.position.y - (camera.viewportHeight / 4.0f)) * lerp * delta;
 
         // Update Wall position to match the camera position.
         leftWall.setTransform(new Vector2(camera.position.x - camera.viewportWidth / 4, camera.position.y), 0);
@@ -154,15 +150,13 @@ public class GameplayScreen extends GameScreen {
     private void addWalls() {
         int size = 10;
 
-        int leftSide = (int)(camera.position.x - camera.viewportWidth / 4);
-        int rightSide = (int)(camera.position.x + camera.viewportWidth / 4) - size;
-        int topSide = (int)(camera.position.y + camera.viewportHeight / 4) - size;
-        int botSide = (int)(camera.position.y - camera.viewportHeight / 4);
+        float leftSide = camera.position.x - camera.viewportWidth / 4;
+        float rightSide = camera.position.x + camera.viewportWidth / 4 - size;
+        float topSide = camera.position.y + camera.viewportHeight / 4 - size;
+        float botSide = camera.position.y - camera.viewportHeight / 4;
 
         int width = viewport.getScreenWidth();
         int height = -viewport.getScreenHeight();
-
-
 
         shapeRenderer.setProjectionMatrix(camera.combined);
 
