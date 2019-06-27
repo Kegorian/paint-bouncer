@@ -20,6 +20,7 @@ public class Platform extends Sprite {
     // Fields
     private Body body;
     private Color color;
+    private boolean pointGained;
 
     /**
      * Creates a new instance of Platform
@@ -50,6 +51,9 @@ public class Platform extends Sprite {
         // Set color
         this.color = color;
 
+        // When the ball hits this platform this is true.
+        pointGained = false;
+
         // Attach the class to the physics body.
         body.setUserData(this);
 
@@ -71,4 +75,8 @@ public class Platform extends Sprite {
     public Body getBody() { return body; }
 
     public Color getColor() { return color; }
+
+    public boolean isPointGained() { return pointGained; }
+
+    public void setPointGained(boolean value) { pointGained = value; }
 }

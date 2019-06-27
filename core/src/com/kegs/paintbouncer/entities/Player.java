@@ -21,6 +21,7 @@ public class Player extends Sprite {
     // Fields
     private Body playerBody;
     private Color color;
+    private int score;
 
     /**
      * Creates a new instance of Player.
@@ -59,6 +60,7 @@ public class Player extends Sprite {
 
         // Default Color.
         color = GameColors.BLUE;
+        score = 0;
     }
 
     /**
@@ -74,25 +76,32 @@ public class Player extends Sprite {
      * @param contact The contact object for the player and platform.
      */
     public void checkContact(Contact contact) {
-        Body platform;
+        Body platformBody;
 
         // See which fixture is the platform.
         if (contact.getFixtureA().getBody().equals(playerBody)) {
-            platform = contact.getFixtureB().getBody();
+            platformBody = contact.getFixtureB().getBody();
         } else {
-            platform = contact.getFixtureA().getBody();
+            platformBody = contact.getFixtureA().getBody();
         }
 
-        if (platform.getUserData() != null) {
-            if (color.toFloatBits() != ((Platform)platform.getUserData()).getColor().toFloatBits()) {
+        Platform platform = (Platform)platformBody.getUserData();
+
+        if (platform != null) {
+            if (color.toFloatBits() != platform.getColor().toFloatBits()) {
                 // TODO: Add something when the colours and not the same.
+            } else {
+                if (!platform.isPointGained()) {
+                    score++;
+                    platform.setPointGained(true);
+                }
             }
         }
     }
 
-    public Body getBody() { return playerBody; }
-
     public void setPlayerColor(Color color) { this.color = color; }
 
     public Color getColor() { return color; }
+
+    public int getScore() { return score; }
 }

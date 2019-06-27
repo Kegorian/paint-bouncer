@@ -4,11 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.*;
 import com.kegs.paintbouncer.colors.GameColors;
 import com.kegs.paintbouncer.entities.Player;
@@ -29,6 +29,7 @@ public class GameplayScreen extends GameScreen {
     private Player player;
     private PlatformSpawner platformSpawner;
     private ShapeRenderer shapeRenderer;
+    private BitmapFont scoreFont;
 
     /**
      * Creates new instance of GameplayScreen
@@ -75,6 +76,10 @@ public class GameplayScreen extends GameScreen {
         im.addProcessor(gd);
 
         Gdx.input.setInputProcessor(im);
+
+        // Set up font.
+        scoreFont = new BitmapFont();
+        scoreFont.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
     }
 
     /**
@@ -99,6 +104,7 @@ public class GameplayScreen extends GameScreen {
         player.setColor(player.getColor());
         player.draw(spriteBatch);
         spriteBatch.setColor(Color.WHITE);
+        scoreFont.draw(spriteBatch, "Score: " + player.getScore(), (camera.viewportWidth / 2), camera.position.y + (camera.viewportHeight / 4) - 15, 8, 1, false);
         spriteBatch.end();
 
         // Debug Render
@@ -115,6 +121,7 @@ public class GameplayScreen extends GameScreen {
         platformSpawner.dispose();
         gameWorld.dispose();
         debugRenderer.dispose();
+        scoreFont.dispose();
     }
 
     /**
@@ -128,7 +135,7 @@ public class GameplayScreen extends GameScreen {
 
         // Move camera
         float lerp = 0.75f;
-        camera.position.y += (player.getY() - camera.position.y - (camera.viewportHeight / 4.0f)) * lerp * delta;
+        camera.position.y += (player.getY() - camera.position.y - (camera.viewportHeight / 6.0f)) * lerp * delta;
 
         // Update Wall position to match the camera position.
         leftWall.setTransform(new Vector2(camera.position.x - camera.viewportWidth / 4, camera.position.y), 0);
