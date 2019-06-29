@@ -15,6 +15,7 @@ import com.kegs.paintbouncer.colors.GameColors;
 import com.kegs.paintbouncer.entities.Player;
 import com.kegs.paintbouncer.input.GameGestureListener;
 import com.kegs.paintbouncer.platform.PlatformSpawner;
+import com.kegs.paintbouncer.userinterface.UserInterface;
 
 /**
  * The GameplayScreen where that will handle the main part of the game. From
@@ -30,6 +31,7 @@ public class GameplayScreen extends GameScreen {
     private Player player;
     private PlatformSpawner platformSpawner;
     private ShapeRenderer shapeRenderer;
+    private UserInterface ui;
     private Label lbScore;
 
     /**
@@ -79,10 +81,10 @@ public class GameplayScreen extends GameScreen {
         Gdx.input.setInputProcessor(im);
 
         // Set up font.
-        lbScore = new Label("Score: ", uiSkin, "default");
-        lbScore.setPosition((camera.viewportWidth / 2.0f) + 20, camera.position.y + 160f, Align.center);
-        lbScore.setFontScale(0.5f);
-        stage.addActor(lbScore);
+        ui = new UserInterface();
+        lbScore = new Label("Score: ", ui.getSkin(), "default");
+        lbScore.setPosition((camera.viewportWidth / 2.0f), camera.position.y - 45, Align.center);
+        ui.addActor(lbScore);
     }
 
     /**
@@ -106,7 +108,7 @@ public class GameplayScreen extends GameScreen {
 
         addWalls();
 
-        stage.draw();
+        ui.render(delta);
 
         // Debug Render
         // debugRenderer.render(gameWorld, camera.combined);
@@ -151,10 +153,6 @@ public class GameplayScreen extends GameScreen {
 
         // Update Text
         lbScore.setText("Score: " + player.getScore());
-        lbScore.setY(camera.position.y + 160f);
-        lbScore.setOriginY(camera.position.y);
-
-        System.out.println(lbScore.getY() + ", " + camera.position.y + ", " + (lbScore.getY() - camera.position.y));
     }
 
     /**

@@ -5,11 +5,13 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Align;
+import com.kegs.paintbouncer.userinterface.UserInterface;
 
 public class MainMenuScreen extends GameScreen {
 
     // Fields
     private Texture background;
+    private UserInterface ui;
 
     /**
      * Creates a new instance of MainMenuScreen
@@ -21,12 +23,14 @@ public class MainMenuScreen extends GameScreen {
 
         background = new Texture(Gdx.files.internal("graphics/backgrounds/main_menu.png"));
 
-        Label lbTitle = new Label("Paint Bouncer", uiSkin, "title");
+        ui = new UserInterface();
+
+        Label lbTitle = new Label("Paint Bouncer", ui.getSkin(), "title");
         lbTitle.setPosition(camera.viewportWidth / 2.0f, camera.viewportHeight - 120, Align.center);
-        Label lbStart = new Label("Click to Start!", uiSkin, "title");
+        Label lbStart = new Label("Click to Start!", ui.getSkin(), "title");
         lbStart.setPosition(camera.viewportWidth / 2.0f, 250, Align.center);
-        stage.addActor(lbTitle);
-        stage.addActor(lbStart);
+        ui.addActor(lbTitle);
+        ui.addActor(lbStart);
     }
 
     /**
@@ -41,7 +45,7 @@ public class MainMenuScreen extends GameScreen {
         spriteBatch.draw(background, 0, 0);
         spriteBatch.end();
 
-        stage.draw();
+        ui.render(delta);
     }
 
     /**
@@ -58,8 +62,6 @@ public class MainMenuScreen extends GameScreen {
      * @param delta The time between calls.
      */
     protected void update(float delta) {
-        stage.act(delta);
-
         // Move onto the next screen if touched.
         if (Gdx.app.getInput().isTouched()) {
             parent.setScreen(ScreenType.GAMEPLAY);

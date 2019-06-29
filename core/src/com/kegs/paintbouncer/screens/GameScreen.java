@@ -22,8 +22,6 @@ public abstract class GameScreen extends ScreenAdapter {
     protected OrthographicCamera camera;
     protected Viewport viewport;
     protected ScreenManager parent;
-    protected Stage stage;
-    protected Skin uiSkin;
 
     /**
      * Creates a new instance of GameScreen
@@ -38,15 +36,11 @@ public abstract class GameScreen extends ScreenAdapter {
         viewport = new FitViewport(480, 800, camera);
         camera.setToOrtho(false, viewport.getWorldWidth(),
                 viewport.getWorldHeight());
-        stage = new Stage(viewport, spriteBatch);
-        uiSkin = new Skin(Gdx.files.internal("ui/KegUI.json"));
-        Gdx.input.setInputProcessor(stage);
     }
 
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height);
-        stage.getViewport().update(width, height, true);
     }
 
     /**
