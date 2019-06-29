@@ -1,0 +1,65 @@
+{
+BitmapFont: {
+	VarelaRound-Regular: {
+		file: VarelaRound-Regular.fnt
+	}
+	VarelaRound-Regular-Title: {
+		file: VarelaRound-Regular-Title.fnt
+	}
+}
+Color: {
+	BACKGROUND: {
+		hex: 3a4466ff
+	}
+	BLUE: {
+		hex: 00a29cff
+	}
+	FONT: {
+		hex: c0cbdcff
+	}
+	GREEN: {
+		hex: 54e100ff
+	}
+	ORANGE: {
+		hex: ff7100ff
+	}
+	RED: {
+		hex: ba002bff
+	}
+	WHITE: {
+		hex: ffffffff
+	}
+}
+ButtonStyle: {
+	default: {
+		up: btn-down
+		down: btn-click
+		over: btn-over
+	}
+	KegUI: {
+		parent: default
+		up: btn-down
+	}
+}
+LabelStyle: {
+	default: {
+		font: VarelaRound-Regular
+		fontColor: WHITE
+	}
+	title: {
+		font: VarelaRound-Regular-Title
+		fontColor: WHITE
+	}
+}
+TextButtonStyle: {
+	default: {
+		parent: default
+		font: VarelaRound-Regular
+	}
+}
+TextTooltipStyle: {
+	default: {
+		label: default
+	}
+}
+}

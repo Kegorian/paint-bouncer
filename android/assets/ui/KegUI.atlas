@@ -1,0 +1,37 @@
+
+KegUI.png
+size: 512,512
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+btn-click
+  rotate: false
+  xy: 1, 126
+  size: 80, 40
+  split: 20, 19, 19, 19
+  orig: 80, 40
+  offset: 0, 0
+  index: -1
+btn-down
+  rotate: false
+  xy: 1, 168
+  size: 80, 40
+  split: 20, 19, 19, 19
+  orig: 80, 40
+  offset: 0, 0
+  index: -1
+btn-over
+  rotate: false
+  xy: 83, 168
+  size: 80, 40
+  split: 20, 19, 19, 19
+  orig: 80, 40
+  offset: 0, 0
+  index: -1
+VarelaRound-Regular-Title
+  rotate: false
+  xy: 1, 210
+  size: 505, 294
+  orig: 505, 294
+  offset: 0, 0
+  index: -1

@@ -4,12 +4,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.utils.Align;
 import com.kegs.paintbouncer.colors.GameColors;
 import com.kegs.paintbouncer.entities.Player;
 import com.kegs.paintbouncer.input.GameGestureListener;
@@ -29,7 +30,7 @@ public class GameplayScreen extends GameScreen {
     private Player player;
     private PlatformSpawner platformSpawner;
     private ShapeRenderer shapeRenderer;
-    private BitmapFont scoreFont;
+    private Label lbScore;
 
     /**
      * Creates new instance of GameplayScreen
@@ -78,8 +79,10 @@ public class GameplayScreen extends GameScreen {
         Gdx.input.setInputProcessor(im);
 
         // Set up font.
-        scoreFont = new BitmapFont();
-        scoreFont.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        lbScore = new Label("Score: ", uiSkin, "default");
+        lbScore.setPosition((camera.viewportWidth / 2.0f) + 20, camera.position.y + 160f, Align.center);
+        lbScore.setFontScale(0.5f);
+        stage.addActor(lbScore);
     }
 
     /**
@@ -96,16 +99,14 @@ public class GameplayScreen extends GameScreen {
         spriteBatch.begin();
         spriteBatch.draw(background, 0, camera.position.y - viewport.getWorldHeight() / 2.0f);
         platformSpawner.render(spriteBatch);
+        player.setColor(player.getColor());
+        player.draw(spriteBatch);
+        spriteBatch.setColor(Color.WHITE);
         spriteBatch.end();
 
         addWalls();
 
-        spriteBatch.begin();
-        player.setColor(player.getColor());
-        player.draw(spriteBatch);
-        spriteBatch.setColor(Color.WHITE);
-        scoreFont.draw(spriteBatch, "Score: " + player.getScore(), (camera.viewportWidth / 2), camera.position.y + (camera.viewportHeight / 4) - 15, 8, 1, false);
-        spriteBatch.end();
+        stage.draw();
 
         // Debug Render
         // debugRenderer.render(gameWorld, camera.combined);
@@ -121,7 +122,6 @@ public class GameplayScreen extends GameScreen {
         platformSpawner.dispose();
         gameWorld.dispose();
         debugRenderer.dispose();
-        scoreFont.dispose();
     }
 
     /**
@@ -148,6 +148,13 @@ public class GameplayScreen extends GameScreen {
         }
 
         platformSpawner.update(delta);
+
+        // Update Text
+        lbScore.setText("Score: " + player.getScore());
+        lbScore.setY(camera.position.y + 160f);
+        lbScore.setOriginY(camera.position.y);
+
+        System.out.println(lbScore.getY() + ", " + camera.position.y + ", " + (lbScore.getY() - camera.position.y));
     }
 
     /**
@@ -190,7 +197,6 @@ public class GameplayScreen extends GameScreen {
         // Left Wall
         BodyDef platformBodyDef = new BodyDef();
         platformBodyDef.type = BodyDef.BodyType.KinematicBody;
-        //platformBodyDef.position.set(new Vector2(halfWidth / 2 - 8, halfHeight + 5));
         platformBodyDef.position.set(new Vector2(camera.position.x, camera.position.y));
         leftWall = gameWorld.createBody(platformBodyDef);
         PolygonShape platformShape = new PolygonShape();
