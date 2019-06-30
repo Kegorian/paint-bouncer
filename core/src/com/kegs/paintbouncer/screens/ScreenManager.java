@@ -14,6 +14,7 @@ public class ScreenManager {
     // Fields
     private Game game;
     private HashMap<ScreenType, Screen> screens;
+    private SpriteBatch spriteBatch;
 
     /**
      * Creates a new instance of ScreenManager.
@@ -22,10 +23,12 @@ public class ScreenManager {
      */
     public ScreenManager(Game game, SpriteBatch spriteBatch) {
         this.game = game;
+        this.spriteBatch = spriteBatch;
 
         screens = new HashMap<ScreenType, Screen>();
         screens.put(ScreenType.MAINMENU, new MainMenuScreen(spriteBatch, this));
         screens.put(ScreenType.GAMEPLAY, new GameplayScreen(spriteBatch, this));
+        screens.put(ScreenType.GAMEOVER, new GameOverScreen(spriteBatch, this, 0));
 
         // Default to Main Menu
         setScreen(ScreenType.MAINMENU);
@@ -46,5 +49,22 @@ public class ScreenManager {
         for (Screen screen : screens.values()) {
             screen.dispose();
         }
+    }
+
+    /**
+     * Creates a new instance of GamePlayScreen and changes to it.
+     */
+    public void newGame() {
+        screens.put(ScreenType.GAMEPLAY, new GameplayScreen(spriteBatch, this));
+        setScreen(ScreenType.GAMEPLAY);
+    }
+
+    /**
+     *
+     * @param score
+     */
+    public void gameOver(int score) {
+        screens.put(ScreenType.GAMEOVER, new GameOverScreen(spriteBatch, this, score));
+        setScreen(ScreenType.GAMEOVER);
     }
 }

@@ -33,6 +33,13 @@ public class MainMenuScreen extends GameScreen {
         ui.addActor(lbStart);
     }
 
+    @Override
+    public void resize(int width, int height) {
+        super.resize(width, height);
+
+        ui.resize(width, height);
+    }
+
     /**
      * Renders the screen to the window.
      * @param delta Time between calls.

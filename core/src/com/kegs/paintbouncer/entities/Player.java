@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.kegs.paintbouncer.colors.GameColors;
-import com.kegs.paintbouncer.platform.Platform;
 
 import java.util.Random;
 
@@ -21,7 +20,6 @@ public class Player extends Sprite {
     // Fields
     private Body playerBody;
     private Color color;
-    private int score;
 
     /**
      * Creates a new instance of Player.
@@ -60,7 +58,6 @@ public class Player extends Sprite {
 
         // Default Color.
         color = GameColors.BLUE;
-        score = 0;
     }
 
     /**
@@ -70,38 +67,9 @@ public class Player extends Sprite {
         setPosition(playerBody.getPosition().x - 20, playerBody.getPosition().y - 20);
     }
 
-    /**
-     * Checks the contact of the player and a platform / wall, to see if they
-     * match colours.
-     * @param contact The contact object for the player and platform.
-     */
-    public void checkContact(Contact contact) {
-        Body platformBody;
-
-        // See which fixture is the platform.
-        if (contact.getFixtureA().getBody().equals(playerBody)) {
-            platformBody = contact.getFixtureB().getBody();
-        } else {
-            platformBody = contact.getFixtureA().getBody();
-        }
-
-        Platform platform = (Platform)platformBody.getUserData();
-
-        if (platform != null) {
-            if (color.toFloatBits() != platform.getColor().toFloatBits()) {
-                // TODO: Add something when the colours and not the same.
-            } else {
-                if (!platform.isPointGained()) {
-                    score++;
-                    platform.setPointGained(true);
-                }
-            }
-        }
-    }
-
     public void setPlayerColor(Color color) { this.color = color; }
 
     public Color getColor() { return color; }
 
-    public int getScore() { return score; }
+    public Body getBody() { return playerBody; }
 }

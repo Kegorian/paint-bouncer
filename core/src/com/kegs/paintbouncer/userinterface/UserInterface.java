@@ -29,7 +29,6 @@ public class UserInterface {
                 viewport.getWorldHeight());
         stage = new Stage(viewport);
         skin = new Skin(Gdx.files.internal("ui/KegUI.json"));
-        // Gdx.input.setInputProcessor(stage);
     }
 
     /**

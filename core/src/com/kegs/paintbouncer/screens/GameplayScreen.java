@@ -14,6 +14,7 @@ import com.badlogic.gdx.utils.Align;
 import com.kegs.paintbouncer.colors.GameColors;
 import com.kegs.paintbouncer.entities.Player;
 import com.kegs.paintbouncer.input.GameGestureListener;
+import com.kegs.paintbouncer.platform.Platform;
 import com.kegs.paintbouncer.platform.PlatformSpawner;
 import com.kegs.paintbouncer.userinterface.UserInterface;
 
@@ -33,6 +34,7 @@ public class GameplayScreen extends GameScreen {
     private ShapeRenderer shapeRenderer;
     private UserInterface ui;
     private Label lbScore;
+    private int score;
 
     /**
      * Creates new instance of GameplayScreen
@@ -53,12 +55,13 @@ public class GameplayScreen extends GameScreen {
         player = new Player(gameWorld);
         platformSpawner = new PlatformSpawner(gameWorld);
         shapeRenderer = new ShapeRenderer();
+        score = 0;
 
         // Set up collision check.
         gameWorld.setContactListener(new ContactListener() {
             @Override
             public void beginContact(Contact contact) {
-                player.checkContact(contact);
+                checkContact(contact);
             }
 
             @Override
@@ -85,6 +88,15 @@ public class GameplayScreen extends GameScreen {
         lbScore = new Label("Score: ", ui.getSkin(), "default");
         lbScore.setPosition((camera.viewportWidth / 2.0f), camera.position.y - 45, Align.center);
         ui.addActor(lbScore);
+
+
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        super.resize(width, height);
+
+        ui.resize(width, height);
     }
 
     /**
@@ -152,7 +164,7 @@ public class GameplayScreen extends GameScreen {
         platformSpawner.update(delta);
 
         // Update Text
-        lbScore.setText("Score: " + player.getScore());
+        lbScore.setText("Score: " + score);
     }
 
     /**
@@ -206,5 +218,34 @@ public class GameplayScreen extends GameScreen {
         rightWall = gameWorld.createBody(platformBodyDef);
         rightWall.createFixture(platformShape, 0.0f);
         platformShape.dispose();
+    }
+
+    /**
+     * Checks the contact of the player and a platform / wall, to see if they
+     * match colours.
+     * @param contact The contact object for the player and platform.
+     */
+    private void checkContact(Contact contact) {
+        Body platformBody;
+
+        // See which fixture is the platform.
+        if (contact.getFixtureA().getBody().equals(player.getBody())) {
+            platformBody = contact.getFixtureB().getBody();
+        } else {
+            platformBody = contact.getFixtureA().getBody();
+        }
+
+        Platform platform = (Platform)platformBody.getUserData();
+
+        if (platform != null) {
+            if (player.getColor().toFloatBits() != platform.getColor().toFloatBits()) {
+                parent.gameOver(score);
+            } else {
+                if (!platform.isPointGained()) {
+                    score++;
+                    platform.setPointGained(true);
+                }
+            }
+        }
     }
 }
