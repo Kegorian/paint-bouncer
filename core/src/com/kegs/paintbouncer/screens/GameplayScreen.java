@@ -33,8 +33,9 @@ public class GameplayScreen extends GameScreen {
     private PlatformSpawner platformSpawner;
     private ShapeRenderer shapeRenderer;
     private UserInterface ui;
-    private Label lbScore;
-    private int score;
+    private Label lbScore, lbCountdown;
+    private int score, countdownStart;
+    private float startTimer;
 
     /**
      * Creates new instance of GameplayScreen
@@ -56,6 +57,8 @@ public class GameplayScreen extends GameScreen {
         platformSpawner = new PlatformSpawner(gameWorld);
         shapeRenderer = new ShapeRenderer();
         score = 0;
+        startTimer = 0.0f;
+        countdownStart = 3;
 
         // Set up collision check.
         gameWorld.setContactListener(new ContactListener() {
@@ -85,11 +88,16 @@ public class GameplayScreen extends GameScreen {
 
         // Set up font.
         ui = new UserInterface();
-        lbScore = new Label("Score: ", ui.getSkin(), "default");
-        lbScore.setPosition((camera.viewportWidth / 2.0f), camera.position.y - 45, Align.center);
+        lbScore = new Label("", ui.getSkin(), "default");
+        lbScore.setAlignment(Align.center);
+        lbScore.setPosition(camera.viewportWidth / 2, camera.viewportHeight - 45);
+
+        lbCountdown = new Label("3", ui.getSkin(), "title");
+        lbCountdown.setAlignment(Align.center);
+        lbCountdown.setPosition(camera.viewportWidth / 2, camera.viewportHeight / 2);
+
         ui.addActor(lbScore);
-
-
+        ui.addActor(lbCountdown);
     }
 
     @Override
@@ -144,27 +152,44 @@ public class GameplayScreen extends GameScreen {
      * @param delta The time between calls.
      */
     protected void update(float delta) {
-        gameWorld.step(1/60f, 6, 2);
-        player.update(delta);
-
         // Move camera
         float lerp = 0.75f;
         camera.position.y += (player.getY() - camera.position.y - (camera.viewportHeight / 6.0f)) * lerp * delta;
 
-        // Update Wall position to match the camera position.
-        leftWall.setTransform(new Vector2(camera.position.x - camera.viewportWidth / 4, camera.position.y), 0);
-        rightWall.setTransform(new Vector2(camera.position.x + camera.viewportWidth / 4, camera.position.y), 0);
+        if (startTimer < countdownStart + 1) {
+            startTimer += delta;
 
-        // Spawn new platforms.
-        if (camera.position.y - (camera.viewportHeight * 0.25) < platformSpawner.getLastPlatform().getY() + 400.0f) {
-            platformSpawner.spawnPlatform();
-            platformSpawner.removePlatform();
+            lbCountdown.setText(countdownStart - (int)startTimer);
+
+            player.update(delta);
+
+            if (startTimer > countdownStart)
+                lbCountdown.setText("GO!");
+
+            lbCountdown.setPosition(camera.viewportWidth / 2, camera.viewportHeight / 2);
         }
+        else {
+            lbCountdown.setText("");
 
-        platformSpawner.update(delta);
+            gameWorld.step(1/60f, 6, 2);
+            player.update(delta);
 
-        // Update Text
-        lbScore.setText("Score: " + score);
+            // Update Wall position to match the camera position.
+            leftWall.setTransform(new Vector2(camera.position.x - camera.viewportWidth / 4, camera.position.y), 0);
+            rightWall.setTransform(new Vector2(camera.position.x + camera.viewportWidth / 4, camera.position.y), 0);
+
+            // Spawn new platforms.
+            if (camera.position.y - (camera.viewportHeight * 0.25) < platformSpawner.getLastPlatform().getY() + 400.0f) {
+                platformSpawner.spawnPlatform();
+                platformSpawner.removePlatform();
+            }
+
+            platformSpawner.update(delta);
+
+            // Update Text
+            lbScore.setText("Score: " + score);
+            lbScore.setPosition(camera.viewportWidth / 2, camera.viewportHeight - 45);
+        }
     }
 
     /**
